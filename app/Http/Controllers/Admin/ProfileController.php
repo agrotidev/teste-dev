@@ -36,24 +36,40 @@ class ProfileController extends Controller
                 $foto = $request->file('foto');
     
                 if (!$foto->isValid() && in_array($foto->getClientOriginalExtension(), ['jpeg', 'jpg', 'png'])) {
-                    dd('Não é uma imagem válida');
+                    Toast::error('Não é uma imagem válida!', '', ["positionClass" => "toast-top-center"]);
+                    return redirect()->back();
                 }
     
-                $pathFoto = $request->foto->store('fotos');
+                if($pathFoto = $foto->store('fotos')) {
+                    if ($user->foto) {
+                        Storage::delete($user->foto);
+                    }
+
+                    $user->foto = $pathFoto;
+                }
+
             }
-        
-            if(!$user->update($request->all()))
+    
+            if(!$user->update([
+                'email' => $request->email,
+                'cep' => $request->cep,
+                'logradouro' => $request->logradouro,
+                'complemento' => $request->complemento,
+                'bairro' => $request->bairro,
+                'cidade' => $request->cidade,
+                'uf' => $request->uf
+            ]))
             {
-                Toast::success('Erro ao atualizar!');
+                Toast::error('Erro ao atualizar!', '', ["positionClass" => "toast-top-center"]);
                 return redirect()->back();
             }
 
-            Toast::success('Atualizado com sucesso!');
+            Toast::success('Atualizado com sucesso!', '', ["positionClass" => "toast-top-center"]);
 
             return redirect()->route('profile');
         } catch (\Throwable $th) {
 
-            // Caso aconteça algum erro na atualização, removo a foto do storage
+            // Caso aconteça algum erro na atualização, removo a foto carregada!
             if ($pathFoto) {
                 Storage::delete($pathFoto);
             }

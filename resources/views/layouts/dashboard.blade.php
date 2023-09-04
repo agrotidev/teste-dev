@@ -41,7 +41,7 @@
     >
       <img
         class="object-cover w-8 h-8 rounded-full"
-        src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
+        src="{{ $user->foto ? url($user->foto) : 'https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg' }}"
         alt=""
         aria-hidden="true"
       />
