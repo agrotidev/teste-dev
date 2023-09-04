@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Services\ViaCep\ViaCepService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Brian2694\Toastr\Facades\Toastr as Toast;
 
 class ProfileController extends Controller
 {
@@ -26,18 +28,37 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        if ($request->hasFile('foto')) {
-            $foto = $request->file('foto');
+        $user = User::find(Auth::user()->id);
+        $pathFoto = '';
 
-            if (!$foto->isValid() && in_array($foto->getClientOriginalExtension(), ['jpeg', 'jpg', 'png'])) {
-                dd('Não é uma imagem válida');
+        try {
+            if ($request->hasFile('foto')) {
+                $foto = $request->file('foto');
+    
+                if (!$foto->isValid() && in_array($foto->getClientOriginalExtension(), ['jpeg', 'jpg', 'png'])) {
+                    dd('Não é uma imagem válida');
+                }
+    
+                $pathFoto = $request->foto->store('fotos');
+            }
+        
+            if(!$user->update($request->all()))
+            {
+                Toast::success('Erro ao atualizar!');
+                return redirect()->back();
             }
 
-            $pathFoto = $request->foto->store('fotos');
-            dd($pathFoto);
-        }
+            Toast::success('Atualizado com sucesso!');
 
-        dd($request->all());
+            return redirect()->route('profile');
+        } catch (\Throwable $th) {
+
+            // Caso aconteça algum erro na atualização, removo a foto do storage
+            if ($pathFoto) {
+                Storage::delete($pathFoto);
+            }
+
+            Toast::error('Erro ao atualizar!');        }
     }
 
     function getCep(Request $request)

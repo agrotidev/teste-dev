@@ -247,6 +247,9 @@
       </div>
     </div>
 
+
+    @include('layouts.includes.partials.scripts')
+
     @yield('scripts')
   </body>
 </html>
