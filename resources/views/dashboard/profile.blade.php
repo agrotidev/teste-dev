@@ -67,18 +67,10 @@
 
                 <div class="grid grid-rows-2 gap-2 col-span-1 sm:col-span-1 mt-6">
 
-                    {{-- @php
-                        $foto = $user->foto ?? null;
-
-                        if (empty($foto)) {
-                            $foto = 'https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg';
-                        }
-                    @endphp --}}
-
                     <img class="rounded-lg"
                         id="foto"
                         style="width: 100px; height: 100px; !important;"
-                        src="{{ $user->foto ? url($user->foto) : 'https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg' }}"
+                        src="{{ $user->foto ? url($user->foto) : asset('img/user_default.jpg') }}"
                         alt="Foto" />
                     <div class="col-span-6 sm:col-span-3 mt-4 ml-6" style="margin-left: 4px !important;">
                         <input
